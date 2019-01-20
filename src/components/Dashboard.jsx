@@ -61,7 +61,7 @@ class Dashboard extends React.Component {
         name: '',
         tax: 1,
       },
-      showReport: true,
+      showReport: false,
     };
     this.addPurchase = this.addPurchase.bind(this);
     this.editPurchase = this.editPurchase.bind(this);
