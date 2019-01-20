@@ -6,7 +6,7 @@ function priceFormatter(cell, row) {
   if (isNaN(price)) {
     return null;
   }
-  return (<span><i className='ion-social-usd'></i> {price.toFixed(6).toLocaleString()}</span>);
+  return (<span><i className='ion-social-usd'></i> {formatNumber(price)}</span>);
 }
 
 function bitcoinFormatter(cell, row) {
@@ -14,8 +14,16 @@ function bitcoinFormatter(cell, row) {
   if (isNaN(price)) {
     return null;
   }
-  return (<span><i className='ion-social-bitcoin'></i> {price.toFixed(8).toLocaleString()}</span>);
+  return (<span><i className='ion-social-bitcoin'></i> {formatNumber(price)}</span>);
 }
+
+function formatNumber(number) {
+  if(isNaN(Number(number))) {
+    return '----';
+  }
+  var [entero, decimals] = Number(number).toFixed(6).toString().split('.');
+  return (entero.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.' + decimals);
+};
 
 // https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/svg/icon/btc.svg
 function iconFormatter(cell, row) {

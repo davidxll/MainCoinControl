@@ -15,24 +15,26 @@ function formatNumber(number) {
 function getReport(sells) {
   const report = {oldestSale: moment(), newestSale: moment(), sales: []};
   sells.forEach(s => {
-    const momentPurchased = moment(s.purchasedDate)
-    const momentSold = moment(s.soldDate)
-    const sell = {
-      ...s,
-      formattedPurchasedDate: momentPurchased.format(shortFormat),
-      formattedSoldDate: momentSold.format(shortFormat),
-      shortTerm: true,
-    } 
-    if(report.oldestSale.isBefore(momentSold)) {
-      report.oldestSale = momentSold;
+    if(s.sold) {
+      const momentPurchased = moment(s.purchasedDate)
+      const momentSold = moment(s.soldDate)
+      const sell = {
+        ...s,
+        formattedPurchasedDate: momentPurchased.format(shortFormat),
+        formattedSoldDate: momentSold.format(shortFormat),
+        shortTerm: true,
+      } 
+      if(report.oldestSale.isBefore(momentSold)) {
+        report.oldestSale = momentSold;
+      }
+      if(report.newestSale.isAfter(momentSold)) {
+        report.newestSale = momentSold;
+      }
+      if(momentSold.diff(momentPurchased, 'year') > 1) {
+        sell.shortTerm = false;
+      }
+      report.sales.push(sell);
     }
-    if(report.newestSale.isAfter(momentSold)) {
-      report.newestSale = momentSold;
-    }
-    if(momentSold.diff(momentPurchased, 'year') > 1) {
-      sell.shortTerm = false;
-    }
-    report.sales.push(sell);
   })
   return report;
 }

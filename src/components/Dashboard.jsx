@@ -24,7 +24,7 @@ function calculatePurchasesData(purchases, market) {
       return m.symbol === p.currencyCode
     })
     p.coinInfo = transformCoinInfo(purchasedCoinInfo);
-    p.price = purchasedCoinInfo.price_btc;
+    // p.price = purchasedCoinInfo.price_btc;
     p.isBtcPurchase = true;
     
     if(p.sold) {
@@ -34,12 +34,11 @@ function calculatePurchasesData(purchases, market) {
       p.price = purchasedCoinInfo.price_usd;
       p.isBtcPurchase = false;
     }
-    if(p.sold && p.btcPriceAtPurchase && !p.isBtcPurchase) {
-      p.price = +p.btcPriceAtPurchase;
+    if(p.sold && !p.isBtcPurchase) {
       p.rateCurrency = 'USD';
     }
     let value = p.amount * p.price;
-    if(p.sold) {
+    if(p.sold && +p.sellPrice) {
       p.value = +p.sellPrice;
       p.rateCurrency = 'USD';
     }
@@ -138,7 +137,13 @@ class Dashboard extends React.Component {
       console.log("userData ", userData);
       this.setState({user: userData});
     })
-    .catch(err => alert(err));
+    .catch(err => {
+      if(err.code === 'app/invalid-credential') {
+        sessionStorage.removeItem('ecmid');
+        window.reload();
+      }
+      alert(err)
+    });
   }
 
   loadMarketAndPurchaseData() {
