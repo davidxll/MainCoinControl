@@ -4,10 +4,10 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
-import Market from './components/Market';
+import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Home from './components/Home';
-import AuthService from './services/auth.service'
+import AuthService from './services/auth.service';
 import './styles/index.scss';
 
 const authInstance = new AuthService();
@@ -18,7 +18,7 @@ const Routes = () => (
       <Route exact path="/login" component={Login} auth={authInstance}/>
       <Route exact path="/dashboard" render={() => (
         authInstance.isLoggedIn() ? (
-          <Market auth={authInstance} />
+          <Dashboard auth={authInstance} />
         ) : (
           <Redirect to="/login"/>
         )

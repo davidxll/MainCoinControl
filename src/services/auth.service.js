@@ -7,6 +7,7 @@ class AuthService {
     this.loginEndpoint = baseEndpoint + '/login';
     this.createAccountEndpoint = baseEndpoint + '/createUser';
     this.logoutEndpoint = baseEndpoint + '/logout';
+    this.userDataEndpoint = baseEndpoint + '/user';
     this.uid = null;
     this.isUserLogin = false;
   }
@@ -26,10 +27,35 @@ class AuthService {
   isLoggedIn() {
     return this.isUserLogin || window.sessionStorage.getItem('ecmid');
   }
+
+  getUserData() {
+    const self = this;
+    const uid = this.uid || window.sessionStorage.getItem('ecmid');
+    if (!this.isLoggedIn()) {
+      return Promise.reject('Not logged in');
+    }
+    return new Promise((resolve, reject) => {
+      axios
+        .post(self.userDataEndpoint, {uid})
+        .then((response) => {
+          console.log("inside userData: ", response);
+          const responseData = response.data;
+          if (!responseData || !responseData.userData) {
+            reject('no user data');
+          }
+          resolve(responseData.userData);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
   
   saveLocalUID(uid) {
     this.uid = uid;
-    window.sessionStorage.setItem('ecmid', uid)
+    if (uid) {
+      window.sessionStorage.setItem('ecmid', uid);
+    }
   }
 
   signUp(userData) {
@@ -50,6 +76,11 @@ class AuthService {
           reject(error);
         });
     });
+  }
+
+  logout() {
+    this.uid = null;
+    window.sessionStorage.removeItem('ecmid');
   }
 
   login(userData) {

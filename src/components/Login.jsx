@@ -42,13 +42,16 @@ class Login extends React.Component {
       this.props.history.push("/dashboard")
     }).catch(e => {
       this.turnLoading(false);
-      if(e.response.data.code === "auth/user-not-found") {
+      if (!e || !e.response || !e.response.data || !e.response.data.code) {
+        alert("unknown server issue. See logs ", e);
+      }
+      else if(e.response.data.code === "auth/user-not-found") {
         alert("wrong email")
       }
-      if(e.response.data.code === "auth/wrong-password") {
+      else if(e.response.data.code === "auth/wrong-password") {
         alert("wrong password")
       }
-      console.log('error loging in ', e)
+      console.log('error loging in ', e);
       alert(e.response.data.message);
     })
   }
@@ -58,10 +61,12 @@ class Login extends React.Component {
     this.turnLoading(true);
     const email = evt.target.email && evt.target.email.value;
     const password = evt.target.password && evt.target.password.value;
-    this.auth.signUp({email, password}).then(res => {
+    const fullName = evt.target.fullName && evt.target.fullName.value;
+    const tax = evt.target.tax && evt.target.tax.value;
+    this.auth.signUp({email, password, fullName, tax}).then(res => {
       console.log("successfully sign up: ", res)
       this.turnLoading(false);
-      this.props.history.push("/dashboard")
+      this.props.history.push("/dashboard");
     }).catch(e => {
       this.turnLoading(false);
       console.log('error create', e)
@@ -89,6 +94,8 @@ class Login extends React.Component {
           (<form className="register-form" onSubmit={this.onSignUpSubmit}>
             <input type="email" placeholder="email" name="email" required />
             <input type="password" placeholder="password" name="password" required />
+            <input type="text" placeholder="Name (optional)" name="fullName" />
+            <input type="number" min="1" max="100" placeholder="% State Tax" name="tax" required />
             <input type="submit" style={{position: 'absolute', left: -9999, width: 1, height: 1}} tabIndex="-1" />
             { this.state.showLoading ?
             <LoadingComponent />
