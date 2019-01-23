@@ -4,26 +4,17 @@ const axios = require('axios')
 const firebase = require('firebase')
 const bodyParser = require('body-parser');
 const admin = require("firebase-admin");
-const serviceAccount = require("./firebase-admin-config.json");
+const serviceAccount = require("./firebase-keys.json");
 
 const apiEndpoint = 'https://api.coinmarketcap.com/v1/ticker'
 
-var fireConfig = {
-  apiKey: "AIzaSyAZXrYA0ddCNy8d1Vg1iPZQK4q3hzdPy0g",
-  authDomain: "maincoinmanager.firebaseapp.com",
-  databaseURL: "https://maincoinmanager.firebaseio.com",
-  projectId: "maincoinmanager",
-  storageBucket: "maincoinmanager.appspot.com",
-  messagingSenderId: "596811972788"
-};
-
-const firebaseApp = firebase.initializeApp(fireConfig)
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+firebase.initializeApp(serviceAccount.fireConfig);
+var adminApp = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount.adminKeys),
   databaseURL: "https://maincoinmanager.firebaseio.com"
 });
 const database = firebase.database();
-const adminAuth = admin.auth();
+const adminAuth = adminApp.auth();
 
 var allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -138,7 +129,7 @@ app.post('/user', function(request, response) {
     response.status(500).send({error: 'problems gathering user data'});
   })
   .catch(function(error) {
-    console.log("Error logging in:", error);
+    console.log("Error getting user data:", error);
     response.status(403).send(error)
   });
 })
