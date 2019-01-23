@@ -77,7 +77,7 @@
   "scripts": {
     "server": "node ./server/index.js",
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "build": "react-scripts build && cp build/index.html build/404.html",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
