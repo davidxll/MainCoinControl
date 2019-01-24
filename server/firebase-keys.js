@@ -5,7 +5,7 @@ const firebaseKeys = {
     type: envVars.firebase_type,
     project_id: envVars.firebase_project_id,
     private_key_id: envVars.firebase_private_key_id,
-    private_key: envVars.firebase_private_key,
+    private_key: envVars.firebase_private_key.replace(/\\n/g, '\n'),
     client_email: envVars.firebase_client_email,
     client_id: envVars.firebase_client_id,
     auth_uri: envVars.firebase_auth_uri,
