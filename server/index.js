@@ -4,13 +4,12 @@ const axios = require('axios')
 const firebase = require('firebase')
 const bodyParser = require('body-parser');
 const admin = require("firebase-admin");
-const serviceAccount = require("./firebase-keys.json");
-
+const firebaseKeys = require("./firebase-keys.js");
 const apiEndpoint = 'https://api.coinmarketcap.com/v1/ticker'
 
-firebase.initializeApp(serviceAccount.fireConfig);
+firebase.initializeApp(firebaseKeys.fireConfig);
 var adminApp = admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount.adminKeys),
+  credential: admin.credential.cert(firebaseKeys.adminKeys),
   databaseURL: "https://maincoinmanager.firebaseio.com"
 });
 const database = firebase.database();
